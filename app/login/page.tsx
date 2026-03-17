@@ -54,9 +54,17 @@ export default function LoginPage() {
       <div className="container relative z-10 px-4">
         <div className="mx-auto max-w-md">
           <div className="mb-8 text-center">
-            <Link href="/" className="inline-flex items-center gap-2">
-              <span className="text-3xl font-bold tracking-tight text-foreground">EROS</span>
-              <span className="text-3xl font-light" style={{color:"#8b5cf6"}}>AFK</span>
+            <Link href="/" className="inline-flex items-center gap-3">
+              <div style={{width:"44px",height:"44px",background:"rgba(255,255,255,0.05)",border:"1px solid rgba(255,255,255,0.1)",borderRadius:"11px",display:"flex",alignItems:"center",justifyContent:"center"}}>
+                <svg width="34" height="34" viewBox="0 0 34 34" fill="none">
+                  <text x="3" y="25" fontFamily="Georgia,serif" fontSize="23" fontWeight="700" fill="white" letterSpacing="-3">E</text>
+                  <text x="13" y="25" fontFamily="Georgia,serif" fontSize="23" fontWeight="700" fill="#8b5cf6" letterSpacing="-3">S</text>
+                </svg>
+              </div>
+              <div>
+                <span className="text-3xl font-bold tracking-tight text-foreground">EROS</span>
+                <span className="ml-1 text-3xl font-light" style={{color:"#8b5cf6"}}>AFK</span>
+              </div>
             </Link>
             <p className="mt-4 text-sm text-muted-foreground">Minecraft AFK Bot Kontrol Paneli</p>
           </div>

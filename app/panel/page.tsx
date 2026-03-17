@@ -175,11 +175,11 @@ function PanelPageInner() {
         <header className="fixed top-0 z-50 w-full border-b border-border/50 bg-background/90 backdrop-blur-xl">
           <div className="flex h-14 items-center justify-between px-4">
             <div className="flex items-center gap-3">
-              <div className="relative flex h-9 w-9 items-center justify-center">
-                <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-cyan-500 to-emerald-500 opacity-20 blur-sm" />
-                <div className="relative flex h-9 w-9 items-center justify-center rounded-lg border border-cyan-500/30 bg-card">
-                  <Bot className="h-4 w-4 text-cyan-400" />
-                </div>
+              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-card border border-white/10">
+                <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                  <text x="4" y="20" fontFamily="Georgia,serif" fontSize="18" fontWeight="700" fill="white" letterSpacing="-2">E</text>
+                  <text x="10" y="20" fontFamily="Georgia,serif" fontSize="18" fontWeight="700" fill="#8b5cf6" letterSpacing="-2">S</text>
+                </svg>
               </div>
               <div>
                 <span className="text-base font-bold text-foreground">EROS</span>
