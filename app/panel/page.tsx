@@ -65,10 +65,21 @@ function PanelPageInner() {
 
   // Auth check
   useEffect(() => {
-    checkToken().then(v => {
+    checkToken().then(async v => {
       if (!v) { router.push("/login"); return }
       const u = localStorage.getItem("eros_username")
       if (u) setUsername(u)
+      // Lisans kontrolü
+      try {
+        const { getDashboard } = await import("@/lib/api")
+        const data = await getDashboard()
+        if (!data.is_active || data.isExpired) {
+          router.push("/dashboard")
+          return
+        }
+      } catch {
+        router.push("/login")
+      }
     })
   }, [router])
 
@@ -222,7 +233,7 @@ function PanelPageInner() {
                     className="flex-1 gap-2 bg-emerald-600 hover:bg-emerald-700 border-0">
                     <Play className="h-4 w-4" />Basalt
                   </Button>
-                  <Button onClick={handleStop} disabled={!botStatus.isRunning}
+                  <Button onClick={handleStop} disabled={!botStatus.isRunning && !botStatus.isReady}
                     variant="destructive" className="flex-1 gap-2">
                     <Square className="h-4 w-4" />Durdur
                   </Button>

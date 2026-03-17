@@ -141,7 +141,7 @@ export default function DashboardPage() {
         </div>
       </nav>
 
-      <main className="container px-4 pt-24 pb-16">
+      <main className="min-h-screen container mx-auto px-4 pt-24 pb-16 max-w-4xl">
         <div className="mx-auto max-w-3xl">
           <div className="mb-8 text-center">
             <h1 className="mb-2 text-3xl font-bold text-foreground">

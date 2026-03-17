@@ -403,3 +403,12 @@
   pointer-events: none;
   z-index: 9999;
 }
+
+/* Layout fix */
+body {
+  text-align: left;
+}
+.container {
+  margin-left: auto;
+  margin-right: auto;
+}
