@@ -27,6 +27,7 @@ import {
   MessageCircle,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { ErosLogo } from "@/components/eros-logo"
 
 const faqItems = [
   {

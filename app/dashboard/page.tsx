@@ -8,13 +8,14 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
-  Bot, Key, Clock, Calendar, Shield, ArrowRight, LogOut, Sparkles,
+  Key, Clock, Calendar, Shield, ArrowRight, LogOut, Sparkles,
   AlertTriangle, CheckCircle, Timer, MessageCircle, Lock, Mail, RefreshCw,
 } from "lucide-react"
 import {
   getDashboard, activateKey, resendVerify, logout, enterPanel,
   checkToken, type DashboardData,
 } from "@/lib/api"
+import { ErosLogo } from "@/components/eros-logo"
 
 export default function DashboardPage() {
   const router = useRouter()
@@ -117,13 +118,7 @@ export default function DashboardPage() {
       <nav className="fixed top-0 z-50 w-full border-b border-border/50 bg-background/60 backdrop-blur-xl">
         <div className="container flex h-16 items-center justify-between px-4">
           <Link href="/" className="flex items-center gap-3">
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" style={{marginRight:"6px"}}>
-              <rect width="32" height="32" rx="8" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.1)" strokeWidth="1"/>
-              <text x="4" y="23" fontFamily="Georgia,serif" fontSize="20" fontWeight="700" fill="white" letterSpacing="-3">E</text>
-              <text x="12" y="23" fontFamily="Georgia,serif" fontSize="20" fontWeight="700" fill="#8b5cf6" letterSpacing="-3">S</text>
-            </svg>
-            <span className="text-xl font-bold tracking-tight text-foreground">EROS</span>
-            <span className="ml-1 text-xl font-light" style={{color:"#8b5cf6"}}>AFK</span>
+<ErosLogo size="md" />
           </Link>
           <div className="flex items-center gap-4">
             <span className="hidden text-sm text-muted-foreground sm:inline">

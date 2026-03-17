@@ -20,6 +20,7 @@ import {
   Eye, Send, Trash2, Plus, X, LogOut, AlertTriangle, Info, Link2, Wifi,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { ErosLogo } from "@/components/eros-logo"
 import {
   startBot, stopBot, getBotStatus, getLogs, getChatMessages, sendChat,
   getSettings, saveSettings, togglePanic, setPanicDistance, setDetectionDistance,
@@ -175,17 +176,8 @@ function PanelPageInner() {
         <header className="fixed top-0 z-50 w-full border-b border-border/50 bg-background/90 backdrop-blur-xl">
           <div className="flex h-14 items-center justify-between px-4">
             <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-card border border-white/10">
-                <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-                  <text x="4" y="20" fontFamily="Georgia,serif" fontSize="18" fontWeight="700" fill="white" letterSpacing="-2">E</text>
-                  <text x="10" y="20" fontFamily="Georgia,serif" fontSize="18" fontWeight="700" fill="#8b5cf6" letterSpacing="-2">S</text>
-                </svg>
-              </div>
-              <div>
-                <span className="text-base font-bold text-foreground">EROS</span>
-                <span className="ml-1 text-base font-light" style={{color:"#8b5cf6"}}>AFK</span>
-                <span className="ml-2 text-xs text-muted-foreground">Client v4.0</span>
-              </div>
+              <ErosLogo size="sm" />
+              <span className="ml-1 text-xs text-muted-foreground">Client v4.0</span>
             </div>
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2">
