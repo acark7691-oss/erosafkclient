@@ -55,6 +55,7 @@ function PanelPageInner() {
   const [chatInput, setChatInput] = useState("")
   const [wlInput, setWlInput] = useState("")
   const [toast, setToast] = useState<{msg:string;ok:boolean}|null>(null)
+  const [logsPaused, setLogsPaused] = useState(false)
   const [settingsSaved, setSettingsSaved] = useState(false)
   const logRef = useRef<HTMLDivElement>(null)
 
@@ -101,8 +102,8 @@ function PanelPageInner() {
   useEffect(() => {
     const id = setInterval(async () => {
       try {
-        const [rawLogs, rawChat, status] = await Promise.all([getLogs(), getChatMessages(), getBotStatus()])
-        setLogs(rawLogs.map((msg, i) => {
+        const [rawLogs, rawChat, status] = await Promise.all([logsPaused ? Promise.resolve(null) : getLogs(), getChatMessages(), getBotStatus()])
+        if (rawLogs) setLogs(rawLogs.map((msg, i) => {
           let type: LogEntry["type"] = "info"
           if (msg.includes("✅") || msg.toLowerCase().includes("basarili") || msg.toLowerCase().includes("hazir")) type = "success"
           else if (msg.includes("⚠️") || msg.toLowerCase().includes("uyari")) type = "warning"
@@ -202,10 +203,10 @@ function PanelPageInner() {
           {/* Status Cards */}
           <div className="mb-6 grid gap-3 grid-cols-2 sm:grid-cols-4">
             {[
-              { title: t("panel_bot_status"), value: botStatus.running ? (botStatus.ready ? "Aktif" : "Baglanıyor") : botStatus.waiting ? "Bekleniyor" : "Kapali", sub: botStatus.ready ? "Koruma aktif" : botStatus.waiting ? "Yeniden bağlanıyor..." : "Bekleniyor", icon: <Activity className="h-4 w-4" />, color: botStatus.ready ? "text-emerald-400" : botStatus.running ? "text-amber-400" : "text-muted-foreground" },
-              { title: t("panel_panic_dist"), value: `${settings.panicDistance} blok`, sub: settings.panicEnabled ? "Aktif" : "Kapali", icon: <Shield className="h-4 w-4" />, color: "text-cyan-400" },
+              { title: t("panel_bot_status"), value: botStatus.running ? (botStatus.ready ? t("panel_active") : "Baglanıyor") : botStatus.waiting ? t("panel_waiting") : "Kapali", sub: botStatus.ready ? t("panel_protection") : botStatus.waiting ? t("panel_reconnecting") : t("panel_waiting"), icon: <Activity className="h-4 w-4" />, color: botStatus.ready ? "text-emerald-400" : botStatus.running ? "text-amber-400" : "text-muted-foreground" },
+              { title: t("panel_panic_dist"), value: `${settings.panicDistance} blok`, sub: settings.panicEnabled ? t("panel_active") : "Kapali", icon: <Shield className="h-4 w-4" />, color: "text-cyan-400" },
               { title: t("panel_whitelist"), value: `${whitelist.length} Oyuncu`, sub: "Guvenli liste", icon: <Users className="h-4 w-4" />, color: "text-cyan-400" },
-              { title: t("panel_proxy"), value: proxy.enabled ? "Aktif" : "Kapali", sub: proxy.enabled ? `${proxy.host}:${proxy.port}` : "Direkt baglanti", icon: <Globe className="h-4 w-4" />, color: proxy.enabled ? "text-emerald-400" : "text-amber-400" },
+              { title: t("panel_proxy"), value: proxy.enabled ? t("panel_active") : "Kapali", sub: proxy.enabled ? `${proxy.host}:${proxy.port}` : "Direkt baglanti", icon: <Globe className="h-4 w-4" />, color: proxy.enabled ? "text-emerald-400" : "text-amber-400" },
             ].map((card, i) => (
               <div key={i} className="glass-card rounded-xl p-4">
                 <div className="mb-2 flex items-center gap-2 text-muted-foreground">{card.icon}<span className="text-xs">{card.title}</span></div>
@@ -332,7 +333,7 @@ function PanelPageInner() {
                       <h3 className="flex items-center gap-2 text-sm font-semibold text-foreground">
                         <TerminalIcon className="h-4 w-4 text-cyan-400" />Konsol Ciktisi
                       </h3>
-                      <Button variant="ghost" size="sm" onClick={() => { setLogs([]); showToast("Terminal temizlendi!") }}
+                      <Button variant="ghost" size="sm" onClick={() => { setLogs([]); setLogsPaused(true); showToast(t("panel_clear") + " ✓"); setTimeout(() => setLogsPaused(false), 5000) }}
                         className="text-muted-foreground hover:text-foreground">
                         <Trash2 className="mr-2 h-3 w-3" />Temizle
                       </Button>
@@ -379,7 +380,7 @@ function PanelPageInner() {
                         </div>
                       </ScrollArea>
                       <div className="mt-3 flex gap-2">
-                        <Input placeholder="Mesaj yaz..." value={chatInput}
+                        <Input placeholder=t("panel_msg_ph") value={chatInput}
                           onChange={e => setChatInput(e.target.value)}
                           onKeyDown={e => e.key === "Enter" && handleSendChat()}
                           className="border-border/50 bg-card/50" />
@@ -493,7 +494,7 @@ function PanelPageInner() {
                           </p>
                         </div>
                         <div className={cn("rounded-full px-3 py-1 text-xs font-medium", proxy.enabled ? "bg-emerald-500/10 text-emerald-400" : "bg-amber-500/10 text-amber-400")}>
-                          {proxy.enabled ? "Guvenli" : "Riskli"}
+                          {proxy.enabled ? "Guvenli" : t("panel_risky")}
                         </div>
                       </div>
                     </div>
