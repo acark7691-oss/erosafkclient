@@ -380,7 +380,7 @@ function PanelPageInner() {
                         </div>
                       </ScrollArea>
                       <div className="mt-3 flex gap-2">
-                        <Input placeholder=t("panel_msg_ph") value={chatInput}
+                        <Input placeholder={t("panel_msg_ph")} value={chatInput}
                           onChange={e => setChatInput(e.target.value)}
                           onKeyDown={e => e.key === "Enter" && handleSendChat()}
                           className="border-border/50 bg-card/50" />
