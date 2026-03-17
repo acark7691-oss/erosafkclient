@@ -2,7 +2,7 @@
 
 import { ErosLogo } from "@/components/eros-logo"
 import { LangSwitcher } from "@/components/lang-switcher"
-import { useLang } from "@/lib/use-lang"
+import { useLang } from "@/lib/lang-context"
 
 import Link from "next/link"
 import { Button } from "@/components/ui/button"

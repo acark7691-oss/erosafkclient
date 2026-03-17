@@ -10,7 +10,7 @@ import { Key, Shield, LogOut, Sparkles, AlertTriangle, CheckCircle, Timer, Messa
 import { getDashboard, activateKey, resendVerify, logout, enterPanel, checkToken, type DashboardData } from "@/lib/api"
 import { ErosLogo } from "@/components/eros-logo"
 import { LangSwitcher } from "@/components/lang-switcher"
-import { useLang } from "@/lib/use-lang"
+import { useLang } from "@/lib/lang-context"
 import Link from "next/link"
 
 export default function DashboardPage() {

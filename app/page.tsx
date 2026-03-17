@@ -7,7 +7,7 @@ import { Shield, Zap, Cloud, Eye, Users, Globe, Lock, ArrowRight, HelpCircle, Ac
 import { cn } from "@/lib/utils"
 import { ErosLogo } from "@/components/eros-logo"
 import { LangSwitcher } from "@/components/lang-switcher"
-import { useLang } from "@/lib/use-lang"
+import { useLang } from "@/lib/lang-context"
 
 export const dynamic = "force-dynamic"
 

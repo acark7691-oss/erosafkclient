@@ -13,7 +13,7 @@ import { Eye, EyeOff, User, Lock, Mail, ArrowRight, Sparkles, Shield, MessageCir
 import { login, register, checkToken } from "@/lib/api"
 import { ErosLogo } from "@/components/eros-logo"
 import { LangSwitcher } from "@/components/lang-switcher"
-import { useLang } from "@/lib/use-lang"
+import { useLang } from "@/lib/lang-context"
 
 export default function LoginPage() {
   const router = useRouter()

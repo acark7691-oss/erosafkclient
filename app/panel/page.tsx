@@ -22,7 +22,7 @@ import {
 import { cn } from "@/lib/utils"
 import { ErosLogo } from "@/components/eros-logo"
 import { LangSwitcher } from "@/components/lang-switcher"
-import { useLang } from "@/lib/use-lang"
+import { useLang } from "@/lib/lang-context"
 import {
   startBot, stopBot, getBotStatus, getLogs, getChatMessages, sendChat,
   getSettings, saveSettings, togglePanic, setPanicDistance, setDetectionDistance,
@@ -188,6 +188,7 @@ function PanelPageInner() {
                   Hos geldin, <span className="text-foreground font-medium">{username}</span>
                 </span>
               </div>
+              <LangSwitcher />
               <Button variant="ghost" size="sm" onClick={handleLogout}
                 className="text-muted-foreground hover:text-destructive">
                 <LogOut className="h-4 w-4" /><span className="ml-2 hidden sm:inline">Cikis</span>
@@ -200,10 +201,10 @@ function PanelPageInner() {
           {/* Status Cards */}
           <div className="mb-6 grid gap-3 grid-cols-2 sm:grid-cols-4">
             {[
-              { title: "Bot Durumu", value: botStatus.running ? (botStatus.ready ? "Aktif" : "Baglanıyor") : botStatus.waiting ? "Bekleniyor" : "Kapali", sub: botStatus.ready ? "Koruma aktif" : botStatus.waiting ? "Yeniden bağlanıyor..." : "Bekleniyor", icon: <Activity className="h-4 w-4" />, color: botStatus.ready ? "text-emerald-400" : botStatus.running ? "text-amber-400" : "text-muted-foreground" },
-              { title: "Panik Mesafesi", value: `${settings.panicDistance} blok`, sub: settings.panicEnabled ? "Aktif" : "Kapali", icon: <Shield className="h-4 w-4" />, color: "text-cyan-400" },
-              { title: "Whitelist", value: `${whitelist.length} Oyuncu`, sub: "Guvenli liste", icon: <Users className="h-4 w-4" />, color: "text-cyan-400" },
-              { title: "Proxy", value: proxy.enabled ? "Aktif" : "Kapali", sub: proxy.enabled ? `${proxy.host}:${proxy.port}` : "Direkt baglanti", icon: <Globe className="h-4 w-4" />, color: proxy.enabled ? "text-emerald-400" : "text-amber-400" },
+              { title: "{t("panel_bot_status")}", value: botStatus.running ? (botStatus.ready ? "Aktif" : "Baglanıyor") : botStatus.waiting ? "Bekleniyor" : "Kapali", sub: botStatus.ready ? "Koruma aktif" : botStatus.waiting ? "Yeniden bağlanıyor..." : "Bekleniyor", icon: <Activity className="h-4 w-4" />, color: botStatus.ready ? "text-emerald-400" : botStatus.running ? "text-amber-400" : "text-muted-foreground" },
+              { title: "{t("panel_panic_dist")}", value: `${settings.panicDistance} blok`, sub: settings.panicEnabled ? "Aktif" : "Kapali", icon: <Shield className="h-4 w-4" />, color: "text-cyan-400" },
+              { title: {t("panel_whitelist")}, value: `${whitelist.length} Oyuncu`, sub: "Guvenli liste", icon: <Users className="h-4 w-4" />, color: "text-cyan-400" },
+              { title: {t("panel_proxy")}, value: proxy.enabled ? "Aktif" : "Kapali", sub: proxy.enabled ? `${proxy.host}:${proxy.port}` : "Direkt baglanti", icon: <Globe className="h-4 w-4" />, color: proxy.enabled ? "text-emerald-400" : "text-amber-400" },
             ].map((card, i) => (
               <div key={i} className="glass-card rounded-xl p-4">
                 <div className="mb-2 flex items-center gap-2 text-muted-foreground">{card.icon}<span className="text-xs">{card.title}</span></div>
@@ -286,7 +287,7 @@ function PanelPageInner() {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <RefreshCw className="h-4 w-4 text-muted-foreground" />
-                      <Label className="text-sm font-medium">Otomatik Reconnect</Label>
+                      <Label className="text-sm font-medium">{t("panel_auto_reconnect")}</Label>
                     </div>
                     <Switch checked={settings.autoReconnect} onCheckedChange={handleToggleReconnect} />
                   </div>
@@ -416,7 +417,7 @@ function PanelPageInner() {
                     </h3>
                     <div className="grid gap-4 sm:grid-cols-2">
                       <div className="space-y-2">
-                        <Label className="text-xs text-muted-foreground">Sunucu IP</Label>
+                        <Label className="text-xs text-muted-foreground">{t("panel_server_ip")}</Label>
                         <Input placeholder="play.sunucu.com" value={settings.host}
                           onChange={e => setSettings(s => ({ ...s, host: e.target.value }))}
                           className="border-border/50 bg-card/50" />
@@ -428,13 +429,13 @@ function PanelPageInner() {
                           className="border-border/50 bg-card/50" />
                       </div>
                       <div className="space-y-2">
-                        <Label className="text-xs text-muted-foreground">Minecraft Versiyonu</Label>
+                        <Label className="text-xs text-muted-foreground">{t("panel_version")}</Label>
                         <Input placeholder="1.21.1" value={settings.version}
                           onChange={e => setSettings(s => ({ ...s, version: e.target.value }))}
                           className="border-border/50 bg-card/50" />
                       </div>
                       <div className="space-y-2">
-                        <Label className="text-xs text-muted-foreground">Microsoft Email</Label>
+                        <Label className="text-xs text-muted-foreground">{t("panel_ms_email")}</Label>
                         <Input type="email" placeholder="ornek@hotmail.com" value={settings.mc_username}
                           onChange={e => setSettings(s => ({ ...s, mc_username: e.target.value }))}
                           className="border-border/50 bg-card/50" />
