@@ -128,7 +128,7 @@ export default function LandingPage() {
             </div>
             <div>
               <span className="text-lg font-bold tracking-tight text-foreground">EROS</span>
-              <span className="ml-1 text-lg font-light" style={{color:"#a855f7"}}>AFK</span>
+              <span className="ml-1 text-lg font-light" style={{color:"#8b5cf6"}}>AFK</span>
             </div>
           </Link>
           <div className="hidden items-center gap-8 md:flex">
@@ -415,7 +415,7 @@ export default function LandingPage() {
               </div>
               <div>
                 <span className="text-lg font-bold tracking-tight text-foreground">EROS</span>
-                <span className="ml-1 text-lg font-light" style={{color:"#a855f7"}}>AFK</span>
+                <span className="ml-1 text-lg font-light" style={{color:"#8b5cf6"}}>AFK</span>
               </div>
             </Link>
             <div className="flex items-center gap-6 text-sm text-muted-foreground">

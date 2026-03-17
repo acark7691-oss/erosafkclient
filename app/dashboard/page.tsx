@@ -118,7 +118,7 @@ export default function DashboardPage() {
         <div className="container flex h-16 items-center justify-between px-4">
           <Link href="/" className="flex items-center gap-3">
             <span className="text-xl font-bold tracking-tight text-foreground">EROS</span>
-            <span className="ml-1 text-xl font-light" style={{color:"#a855f7"}}>AFK</span>
+            <span className="ml-1 text-xl font-light" style={{color:"#8b5cf6"}}>AFK</span>
           </Link>
           <div className="flex items-center gap-4">
             <span className="hidden text-sm text-muted-foreground sm:inline">

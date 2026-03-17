@@ -56,7 +56,7 @@ export default function LoginPage() {
           <div className="mb-8 text-center">
             <Link href="/" className="inline-flex items-center gap-2">
               <span className="text-3xl font-bold tracking-tight text-foreground">EROS</span>
-              <span className="text-3xl font-light" style={{color:"#a855f7"}}>AFK</span>
+              <span className="text-3xl font-light" style={{color:"#8b5cf6"}}>AFK</span>
             </Link>
             <p className="mt-4 text-sm text-muted-foreground">Minecraft AFK Bot Kontrol Paneli</p>
           </div>

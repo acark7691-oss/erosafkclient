@@ -42,7 +42,7 @@ const faqItems = [
 function PanelPageInner() {
   const router = useRouter()
   const [username, setUsername] = useState("Eros")
-  const [botStatus, setBotStatus] = useState<BotStatus>({ isRunning: false, isReady: false, panicEnabled: true, panicDistance: 7, detectionDistance: 60, autoReconnect: true, waiting: false })
+  const [botStatus, setBotStatus] = useState<any>({ running: false, ready: false, panicEnabled: true, panicDistance: 7, detectionDistance: 60, autoReconnect: true, waiting: false })
   const [settings, setSettings] = useState<Settings>({ host: "", port: 25565, version: "1.21.1", mc_username: "", panicEnabled: true, panicDistance: 7, detectionDistance: 60, autoReconnect: true, whitelist: [] })
   const [proxy, setProxy] = useState<ProxyStatus>({ enabled: true, host: "", port: 0 })
   const [logs, setLogs] = useState<LogEntry[]>([{ id:"1", timestamp: new Date().toLocaleTimeString("tr-TR"), message: "Panel baslatildi.", type:"info" }])
@@ -183,13 +183,13 @@ function PanelPageInner() {
               </div>
               <div>
                 <span className="text-base font-bold text-foreground">EROS</span>
-                <span className="ml-1 text-base font-light" style={{color:"#a855f7"}}>AFK</span>
+                <span className="ml-1 text-base font-light" style={{color:"#8b5cf6"}}>AFK</span>
                 <span className="ml-2 text-xs text-muted-foreground">Client v4.0</span>
               </div>
             </div>
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2">
-                <div className={cn("h-2 w-2 rounded-full", botStatus.isRunning && botStatus.isReady ? "bg-emerald-500 pulse-online" : "bg-muted-foreground")} />
+                <div className={cn("h-2 w-2 rounded-full", botStatus.running && botStatus.ready ? "bg-emerald-500 pulse-online" : "bg-muted-foreground")} />
                 <span className="text-sm text-muted-foreground">
                   Hos geldin, <span className="text-foreground font-medium">{username}</span>
                 </span>
@@ -206,7 +206,7 @@ function PanelPageInner() {
           {/* Status Cards */}
           <div className="mb-6 grid gap-3 grid-cols-2 sm:grid-cols-4">
             {[
-              { title: "Bot Durumu", value: botStatus.isRunning ? (botStatus.isReady ? "Aktif" : "Baglanıyor") : "Kapali", sub: botStatus.isReady ? "Koruma aktif" : "Bekleniyor", icon: <Activity className="h-4 w-4" />, color: botStatus.isReady ? "text-emerald-400" : botStatus.isRunning ? "text-amber-400" : "text-muted-foreground" },
+              { title: "Bot Durumu", value: botStatus.running ? (botStatus.ready ? "Aktif" : "Baglanıyor") : "Kapali", sub: botStatus.ready ? "Koruma aktif" : "Bekleniyor", icon: <Activity className="h-4 w-4" />, color: botStatus.ready ? "text-emerald-400" : botStatus.running ? "text-amber-400" : "text-muted-foreground" },
               { title: "Panik Mesafesi", value: `${settings.panicDistance} blok`, sub: settings.panicEnabled ? "Aktif" : "Kapali", icon: <Shield className="h-4 w-4" />, color: "text-cyan-400" },
               { title: "Whitelist", value: `${whitelist.length} Oyuncu`, sub: "Guvenli liste", icon: <Users className="h-4 w-4" />, color: "text-cyan-400" },
               { title: "Proxy", value: proxy.enabled ? "Aktif" : "Kapali", sub: proxy.enabled ? `${proxy.host}:${proxy.port}` : "Direkt baglanti", icon: <Globe className="h-4 w-4" />, color: proxy.enabled ? "text-emerald-400" : "text-amber-400" },
@@ -229,18 +229,18 @@ function PanelPageInner() {
                   <Shield className="h-4 w-4 text-cyan-400" />Bot Kontrolleri
                 </h3>
                 <div className="flex gap-3">
-                  <Button onClick={handleStart} disabled={botStatus.isRunning}
+                  <Button onClick={handleStart} disabled={botStatus.running}
                     className="flex-1 gap-2 bg-emerald-600 hover:bg-emerald-700 border-0">
                     <Play className="h-4 w-4" />Basalt
                   </Button>
-                  <Button onClick={handleStop} disabled={!botStatus.isRunning}
+                  <Button onClick={handleStop} disabled={!botStatus.running}
                     variant="destructive" className="flex-1 gap-2">
                     <Square className="h-4 w-4" />Durdur
                   </Button>
                 </div>
                 {settings.host && (
                   <div className="mt-3 flex items-center gap-2 rounded-lg border border-border/50 bg-card/30 px-3 py-2">
-                    <div className={cn("h-2 w-2 rounded-full", botStatus.isRunning ? "bg-emerald-500" : "bg-muted-foreground")} />
+                    <div className={cn("h-2 w-2 rounded-full", botStatus.running ? "bg-emerald-500" : "bg-muted-foreground")} />
                     <span className="text-sm text-foreground truncate">{settings.host}</span>
                   </div>
                 )}
