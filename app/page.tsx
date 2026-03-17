@@ -14,7 +14,6 @@ import {
   Cloud,
   Eye,
   Users,
-  Bot,
   Cpu,
   Lock,
   Globe,
@@ -120,18 +119,7 @@ export default function LandingPage() {
       {/* Navigation */}
       <nav className="fixed top-0 z-50 w-full border-b border-border/50 bg-background/60 backdrop-blur-xl">
         <div className="container flex h-16 items-center justify-between px-4">
-          <Link href="/" className="flex items-center gap-3">
-            <div className="relative flex h-10 w-10 items-center justify-center">
-              <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-cyan-500 to-emerald-500 opacity-20 blur-sm" />
-              <div className="relative flex h-10 w-10 items-center justify-center rounded-xl border border-cyan-500/30 bg-card">
-                <Bot className="h-5 w-5 text-cyan-400" />
-              </div>
-            </div>
-            <div>
-              <span className="text-lg font-bold tracking-tight text-foreground">EROS</span>
-              <span className="ml-1 text-lg font-light" style={{color:"#8b5cf6"}}>AFK</span>
-            </div>
-          </Link>
+          <ErosLogo size="md" />
           <div className="hidden items-center gap-8 md:flex">
             <Link href="#features" className="text-sm text-muted-foreground transition-colors hover:text-cyan-400">
               Ozellikler
@@ -407,18 +395,7 @@ export default function LandingPage() {
       <footer className="border-t border-border/50 bg-card/30 py-12">
         <div className="container px-4">
           <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
-            <Link href="/" className="flex items-center gap-3">
-              <div className="relative flex h-10 w-10 items-center justify-center">
-                <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-cyan-500 to-emerald-500 opacity-20 blur-sm" />
-                <div className="relative flex h-10 w-10 items-center justify-center rounded-xl border border-cyan-500/30 bg-card">
-                  <Bot className="h-5 w-5 text-cyan-400" />
-                </div>
-              </div>
-              <div>
-                <span className="text-lg font-bold tracking-tight text-foreground">EROS</span>
-                <span className="ml-1 text-lg font-light" style={{color:"#8b5cf6"}}>AFK</span>
-              </div>
-            </Link>
+            <ErosLogo size="sm" />
             <div className="flex items-center gap-6 text-sm text-muted-foreground">
               <Link href="/tos" className="hover:text-cyan-400">Kullanim Sartlari</Link>
               <a href="https://discord.gg/erosafk" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-cyan-400">
