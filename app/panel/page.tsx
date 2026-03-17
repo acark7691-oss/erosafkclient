@@ -21,6 +21,8 @@ import {
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { ErosLogo } from "@/components/eros-logo"
+import { LangSwitcher } from "@/components/lang-switcher"
+import { useLang } from "@/lib/use-lang"
 import {
   startBot, stopBot, getBotStatus, getLogs, getChatMessages, sendChat,
   getSettings, saveSettings, togglePanic, setPanicDistance, setDetectionDistance,

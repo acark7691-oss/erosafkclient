@@ -1,6 +1,8 @@
 "use client"
 
 import { ErosLogo } from "@/components/eros-logo"
+import { LangSwitcher } from "@/components/lang-switcher"
+import { useLang } from "@/lib/use-lang"
 
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -103,7 +105,8 @@ export default function TermsOfServicePage() {
             </Button>
           </div>
         </div>
-      </nav>
+        <div style={{position:"absolute",right:"16px",top:"50%",transform:"translateY(-50%)"}}><LangSwitcher /></div>
+</nav>
 
       {/* Hero */}
       <section className="relative overflow-hidden pt-32 pb-16">
