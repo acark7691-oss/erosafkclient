@@ -123,12 +123,12 @@ function PanelPageInner() {
   }, [logs])
 
   const handleStart = async () => {
-    const t = await startBot()
-    showToast(t || "Bot baslatildi!")
+    const res = await startBot()
+    showToast(res || "Bot baslatildi!")
   }
   const handleStop = async () => {
-    const t = await stopBot()
-    showToast(t || "Bot durduruldu.")
+    const res = await stopBot()
+    showToast(res || "Bot durduruldu.")
   }
   const handleLogout = async () => { await logout(); router.push("/login") }
 
