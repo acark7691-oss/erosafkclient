@@ -44,6 +44,7 @@ const faqItems = [
 
 function PanelPageInner() {
   const router = useRouter()
+  const { t } = useLang()
   const [username, setUsername] = useState("Eros")
   const [botStatus, setBotStatus] = useState<any>({ running: false, ready: false, panicEnabled: true, panicDistance: 7, detectionDistance: 60, autoReconnect: true, waiting: false })
   const [settings, setSettings] = useState<Settings>({ host: "", port: 25565, version: "1.21.1", mc_username: "", panicEnabled: true, panicDistance: 7, detectionDistance: 60, autoReconnect: true, whitelist: [] })
@@ -185,13 +186,13 @@ function PanelPageInner() {
               <div className="flex items-center gap-2">
                 <div className={cn("h-2 w-2 rounded-full", botStatus.running && botStatus.ready ? "bg-emerald-500 pulse-online" : "bg-muted-foreground")} />
                 <span className="text-sm text-muted-foreground">
-                  Hos geldin, <span className="text-foreground font-medium">{username}</span>
+                  {t("panel_welcome")} <span className="text-foreground font-medium">{username}</span>
                 </span>
               </div>
               <LangSwitcher />
               <Button variant="ghost" size="sm" onClick={handleLogout}
                 className="text-muted-foreground hover:text-destructive">
-                <LogOut className="h-4 w-4" /><span className="ml-2 hidden sm:inline">Cikis</span>
+                <LogOut className="h-4 w-4" /><span className="ml-2 hidden sm:inline">{t("panel_logout")}</span>
               </Button>
             </div>
           </div>
@@ -331,7 +332,7 @@ function PanelPageInner() {
                       <h3 className="flex items-center gap-2 text-sm font-semibold text-foreground">
                         <TerminalIcon className="h-4 w-4 text-cyan-400" />Konsol Ciktisi
                       </h3>
-                      <Button variant="ghost" size="sm" onClick={() => setLogs([])}
+                      <Button variant="ghost" size="sm" onClick={() => { setLogs([]); showToast("Terminal temizlendi!") }}
                         className="text-muted-foreground hover:text-foreground">
                         <Trash2 className="mr-2 h-3 w-3" />Temizle
                       </Button>
