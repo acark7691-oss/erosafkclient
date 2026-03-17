@@ -117,16 +117,8 @@ export default function DashboardPage() {
       <nav className="fixed top-0 z-50 w-full border-b border-border/50 bg-background/60 backdrop-blur-xl">
         <div className="container flex h-16 items-center justify-between px-4">
           <Link href="/" className="flex items-center gap-3">
-            <div className="relative flex h-10 w-10 items-center justify-center">
-              <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-cyan-500 to-emerald-500 opacity-20 blur-sm" />
-              <div className="relative flex h-10 w-10 items-center justify-center rounded-xl border border-cyan-500/30 bg-card">
-                <Bot className="h-5 w-5 text-cyan-400" />
-              </div>
-            </div>
-            <div>
-              <span className="text-lg font-bold tracking-tight text-foreground">EROS</span>
-              <span className="ml-1 text-lg font-light text-cyan-400">AFK</span>
-            </div>
+            <span className="text-xl font-bold tracking-tight text-foreground">EROS</span>
+            <span className="ml-1 text-xl font-light" style={{color:"#a855f7"}}>AFK</span>
           </Link>
           <div className="flex items-center gap-4">
             <span className="hidden text-sm text-muted-foreground sm:inline">

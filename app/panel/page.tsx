@@ -183,7 +183,7 @@ function PanelPageInner() {
               </div>
               <div>
                 <span className="text-base font-bold text-foreground">EROS</span>
-                <span className="ml-1 text-base font-light text-cyan-400">AFK</span>
+                <span className="ml-1 text-base font-light" style={{color:"#a855f7"}}>AFK</span>
                 <span className="ml-2 text-xs text-muted-foreground">Client v4.0</span>
               </div>
             </div>
@@ -233,7 +233,7 @@ function PanelPageInner() {
                     className="flex-1 gap-2 bg-emerald-600 hover:bg-emerald-700 border-0">
                     <Play className="h-4 w-4" />Basalt
                   </Button>
-                  <Button onClick={handleStop} disabled={!botStatus.isRunning && !botStatus.isReady}
+                  <Button onClick={handleStop} disabled={!botStatus.isRunning}
                     variant="destructive" className="flex-1 gap-2">
                     <Square className="h-4 w-4" />Durdur
                   </Button>

@@ -110,7 +110,7 @@ const stats = [
   { value: "99.9%", label: "Uptime", icon: Activity },
   { value: "7/24", label: "Aktif", icon: Server },
   { value: "<50ms", label: "Tepki", icon: Zap },
-  { value: "1000+", label: "Kullanici", icon: Users },
+  { value: "10+", label: "Proxy Sunucu", icon: Globe },
 ]
 
 export default function LandingPage() {
@@ -128,7 +128,7 @@ export default function LandingPage() {
             </div>
             <div>
               <span className="text-lg font-bold tracking-tight text-foreground">EROS</span>
-              <span className="ml-1 text-lg font-light text-cyan-400">AFK</span>
+              <span className="ml-1 text-lg font-light" style={{color:"#a855f7"}}>AFK</span>
             </div>
           </Link>
           <div className="hidden items-center gap-8 md:flex">
@@ -415,7 +415,7 @@ export default function LandingPage() {
               </div>
               <div>
                 <span className="text-lg font-bold tracking-tight text-foreground">EROS</span>
-                <span className="ml-1 text-lg font-light text-cyan-400">AFK</span>
+                <span className="ml-1 text-lg font-light" style={{color:"#a855f7"}}>AFK</span>
               </div>
             </Link>
             <div className="flex items-center gap-6 text-sm text-muted-foreground">
