@@ -1,7 +1,10 @@
 "use client"
 
+export const dynamic = "force-dynamic"
+
 import { useState, useEffect, useCallback, useRef } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useRouter } from "next/navigation"
+import { Suspense } from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -36,9 +39,8 @@ const faqItems = [
   { id:"q5", question:"Bekleme modu ne ise yarar?", answer:"Bot baglantiktan sonra belirlenen sure bekleyip koruma moduna gecer. Sunucularin spawn korumasini atlamak icin kullanilir." },
 ]
 
-export default function PanelPage() {
+function PanelPageInner() {
   const router = useRouter()
-  const params = useSearchParams()
   const [username, setUsername] = useState("Eros")
   const [botStatus, setBotStatus] = useState<BotStatus>({ isRunning: false, isReady: false, panicEnabled: true, panicDistance: 7, detectionDistance: 60, autoReconnect: true, waiting: false })
   const [settings, setSettings] = useState<Settings>({ host: "", port: 25565, version: "1.21.1", mc_username: "", panicEnabled: true, panicDistance: 7, detectionDistance: 60, autoReconnect: true, whitelist: [] })
@@ -569,5 +571,20 @@ export default function PanelPage() {
         )}
       </div>
     </TooltipProvider>
+  )
+}
+
+export default function PanelPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <div className="flex flex-col items-center gap-4">
+          <div className="h-10 w-10 animate-spin rounded-full border-2 border-cyan-500/20 border-t-cyan-500" />
+          <p className="text-sm text-muted-foreground">Yukleniyor...</p>
+        </div>
+      </div>
+    }>
+      <PanelPageInner />
+    </Suspense>
   )
 }
