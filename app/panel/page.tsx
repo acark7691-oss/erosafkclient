@@ -202,10 +202,10 @@ function PanelPageInner() {
           {/* Status Cards */}
           <div className="mb-6 grid gap-3 grid-cols-2 sm:grid-cols-4">
             {[
-              { title: "{t("panel_bot_status")}", value: botStatus.running ? (botStatus.ready ? "Aktif" : "Baglanıyor") : botStatus.waiting ? "Bekleniyor" : "Kapali", sub: botStatus.ready ? "Koruma aktif" : botStatus.waiting ? "Yeniden bağlanıyor..." : "Bekleniyor", icon: <Activity className="h-4 w-4" />, color: botStatus.ready ? "text-emerald-400" : botStatus.running ? "text-amber-400" : "text-muted-foreground" },
-              { title: "{t("panel_panic_dist")}", value: `${settings.panicDistance} blok`, sub: settings.panicEnabled ? "Aktif" : "Kapali", icon: <Shield className="h-4 w-4" />, color: "text-cyan-400" },
-              { title: {t("panel_whitelist")}, value: `${whitelist.length} Oyuncu`, sub: "Guvenli liste", icon: <Users className="h-4 w-4" />, color: "text-cyan-400" },
-              { title: {t("panel_proxy")}, value: proxy.enabled ? "Aktif" : "Kapali", sub: proxy.enabled ? `${proxy.host}:${proxy.port}` : "Direkt baglanti", icon: <Globe className="h-4 w-4" />, color: proxy.enabled ? "text-emerald-400" : "text-amber-400" },
+              { title: t("panel_bot_status"), value: botStatus.running ? (botStatus.ready ? "Aktif" : "Baglanıyor") : botStatus.waiting ? "Bekleniyor" : "Kapali", sub: botStatus.ready ? "Koruma aktif" : botStatus.waiting ? "Yeniden bağlanıyor..." : "Bekleniyor", icon: <Activity className="h-4 w-4" />, color: botStatus.ready ? "text-emerald-400" : botStatus.running ? "text-amber-400" : "text-muted-foreground" },
+              { title: t("panel_panic_dist"), value: `${settings.panicDistance} blok`, sub: settings.panicEnabled ? "Aktif" : "Kapali", icon: <Shield className="h-4 w-4" />, color: "text-cyan-400" },
+              { title: t("panel_whitelist"), value: `${whitelist.length} Oyuncu`, sub: "Guvenli liste", icon: <Users className="h-4 w-4" />, color: "text-cyan-400" },
+              { title: t("panel_proxy"), value: proxy.enabled ? "Aktif" : "Kapali", sub: proxy.enabled ? `${proxy.host}:${proxy.port}` : "Direkt baglanti", icon: <Globe className="h-4 w-4" />, color: proxy.enabled ? "text-emerald-400" : "text-amber-400" },
             ].map((card, i) => (
               <div key={i} className="glass-card rounded-xl p-4">
                 <div className="mb-2 flex items-center gap-2 text-muted-foreground">{card.icon}<span className="text-xs">{card.title}</span></div>
