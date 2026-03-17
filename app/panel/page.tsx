@@ -55,7 +55,8 @@ function PanelPageInner() {
   const [chatInput, setChatInput] = useState("")
   const [wlInput, setWlInput] = useState("")
   const [toast, setToast] = useState<{msg:string;ok:boolean}|null>(null)
-  const [logsPaused, setLogsPaused] = useState(false)
+  const logsPausedRef = useRef(false)
+  const logClearTimeRef = useRef<number>(0)
   const [settingsSaved, setSettingsSaved] = useState(false)
   const logRef = useRef<HTMLDivElement>(null)
 
@@ -102,15 +103,31 @@ function PanelPageInner() {
   useEffect(() => {
     const id = setInterval(async () => {
       try {
-        const [rawLogs, rawChat, status] = await Promise.all([logsPaused ? Promise.resolve(null) : getLogs(), getChatMessages(), getBotStatus()])
-        if (rawLogs) setLogs(rawLogs.map((msg, i) => {
-          let type: LogEntry["type"] = "info"
-          if (msg.includes("✅") || msg.toLowerCase().includes("basarili") || msg.toLowerCase().includes("hazir")) type = "success"
-          else if (msg.includes("⚠️") || msg.toLowerCase().includes("uyari")) type = "warning"
-          else if (msg.includes("🚨") || msg.toLowerCase().includes("hata") || msg.includes("kicked")) type = "error"
-          else if (msg.toLowerCase().includes("microsoft") || msg.includes("🔐")) type = "microsoft"
-          return { id: `${i}`, timestamp: msg.substring(1, 9) || "", message: msg.substring(11) || msg, type }
-        }))
+        const [rawLogs, rawChat, status] = await Promise.all([logsPausedRef.current ? Promise.resolve(null) : getLogs(), getChatMessages(), getBotStatus()])
+        if (rawLogs) {
+          const clearTime = logClearTimeRef.current
+          const filtered = clearTime > 0
+            ? rawLogs.filter(msg => {
+                const ts = msg.substring(1, 9)
+                if (!ts || ts.length < 8) return false
+                const [h, m, s] = ts.split(":").map(Number)
+                const clearDate = new Date(clearTime)
+                const logDate = new Date(clearTime)
+                logDate.setHours(h, m, s, 0)
+                return logDate > clearDate
+              })
+            : rawLogs
+          if (filtered.length > 0 || clearTime === 0) {
+            setLogs(filtered.map((msg, i) => {
+              let type: LogEntry["type"] = "info"
+              if (msg.includes("✅") || msg.toLowerCase().includes("basarili") || msg.toLowerCase().includes("hazir")) type = "success"
+              else if (msg.includes("⚠️") || msg.toLowerCase().includes("uyari")) type = "warning"
+              else if (msg.includes("🚨") || msg.toLowerCase().includes("hata") || msg.includes("kicked")) type = "error"
+              else if (msg.toLowerCase().includes("microsoft") || msg.includes("🔐")) type = "microsoft"
+              return { id: `${i}`, timestamp: msg.substring(1, 9) || "", message: msg.substring(11) || msg, type }
+            }))
+          }
+        }
         setChat(rawChat.map((m, i) => ({ id: `${i}`, ...m })))
         setBotStatus(status)
       } catch {}
@@ -164,13 +181,14 @@ function PanelPageInner() {
 
   const handleAddWl = async () => {
     if (!wlInput.trim()) return
-    await addToWhitelist(wlInput)
-    setWhitelist(w => [...w, wlInput])
+    const name = wlInput.trim()
+    setWhitelist(w => [...w, name])
     setWlInput("")
+    try { await addToWhitelist(name) } catch {}
   }
   const handleRemoveWl = async (name: string) => {
-    await removeFromWhitelist(name)
     setWhitelist(w => w.filter(p => p !== name))
+    try { await removeFromWhitelist(name) } catch {}
   }
 
   return (
@@ -333,7 +351,7 @@ function PanelPageInner() {
                       <h3 className="flex items-center gap-2 text-sm font-semibold text-foreground">
                         <TerminalIcon className="h-4 w-4 text-cyan-400" />Konsol Ciktisi
                       </h3>
-                      <Button variant="ghost" size="sm" onClick={() => { setLogs([]); setLogsPaused(true); showToast(t("panel_clear") + " ✓"); setTimeout(() => setLogsPaused(false), 5000) }}
+                      <Button variant="ghost" size="sm" onClick={() => { logClearTimeRef.current = Date.now(); setLogs([{ id:"clear", timestamp: new Date().toLocaleTimeString("tr-TR"), message: "─── Terminal temizlendi ───", type:"info" }]); logsPausedRef.current = true; setTimeout(() => { logsPausedRef.current = false }, 3000) }}
                         className="text-muted-foreground hover:text-foreground">
                         <Trash2 className="mr-2 h-3 w-3" />Temizle
                       </Button>
