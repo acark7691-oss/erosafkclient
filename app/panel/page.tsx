@@ -459,11 +459,29 @@ function PanelPageInner() {
                       <div className="rounded-lg border border-border/50 bg-card/30 p-4 flex items-center justify-between">
                         <div className="flex items-center gap-3">
                           <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-cyan-500/10">
-                            <RefreshCw className="h-5 w-5 text-cyan-400" />
+                            <RefreshCw className={cn("h-5 w-5 text-cyan-400", botStatus.waiting && "animate-spin")} />
                           </div>
                           <div>
                             <Label className="text-sm font-medium">Otomatik Reconnect</Label>
                             <p className="text-xs text-muted-foreground">Baglanti kopunca tekrar baglan</p>
+                            {botStatus.waiting && (
+                              <div className="mt-1.5 flex items-center gap-1.5">
+                                <span className="inline-block h-1.5 w-1.5 rounded-full bg-amber-400 animate-pulse" />
+                                <span className="text-xs font-medium text-amber-400">Yeniden bağlanıyor...</span>
+                              </div>
+                            )}
+                            {botStatus.running && botStatus.ready && (
+                              <div className="mt-1.5 flex items-center gap-1.5">
+                                <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                                <span className="text-xs font-medium text-emerald-400">Hazır</span>
+                              </div>
+                            )}
+                            {!botStatus.running && !botStatus.waiting && (
+                              <div className="mt-1.5 flex items-center gap-1.5">
+                                <span className="inline-block h-1.5 w-1.5 rounded-full bg-muted-foreground" />
+                                <span className="text-xs text-muted-foreground">Bekleniyor</span>
+                              </div>
+                            )}
                           </div>
                         </div>
                         <Switch checked={settings.autoReconnect} onCheckedChange={handleToggleReconnect} />
