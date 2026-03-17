@@ -206,7 +206,7 @@ function PanelPageInner() {
           {/* Status Cards */}
           <div className="mb-6 grid gap-3 grid-cols-2 sm:grid-cols-4">
             {[
-              { title: "Bot Durumu", value: botStatus.running ? (botStatus.ready ? "Aktif" : "Baglanıyor") : "Kapali", sub: botStatus.ready ? "Koruma aktif" : "Bekleniyor", icon: <Activity className="h-4 w-4" />, color: botStatus.ready ? "text-emerald-400" : botStatus.running ? "text-amber-400" : "text-muted-foreground" },
+              { title: "Bot Durumu", value: botStatus.running ? (botStatus.ready ? "Aktif" : "Baglanıyor") : botStatus.waiting ? "Bekleniyor" : "Kapali", sub: botStatus.ready ? "Koruma aktif" : botStatus.waiting ? "Yeniden bağlanıyor..." : "Bekleniyor", icon: <Activity className="h-4 w-4" />, color: botStatus.ready ? "text-emerald-400" : botStatus.running ? "text-amber-400" : "text-muted-foreground" },
               { title: "Panik Mesafesi", value: `${settings.panicDistance} blok`, sub: settings.panicEnabled ? "Aktif" : "Kapali", icon: <Shield className="h-4 w-4" />, color: "text-cyan-400" },
               { title: "Whitelist", value: `${whitelist.length} Oyuncu`, sub: "Guvenli liste", icon: <Users className="h-4 w-4" />, color: "text-cyan-400" },
               { title: "Proxy", value: proxy.enabled ? "Aktif" : "Kapali", sub: proxy.enabled ? `${proxy.host}:${proxy.port}` : "Direkt baglanti", icon: <Globe className="h-4 w-4" />, color: proxy.enabled ? "text-emerald-400" : "text-amber-400" },
@@ -240,8 +240,11 @@ function PanelPageInner() {
                 </div>
                 {settings.host && (
                   <div className="mt-3 flex items-center gap-2 rounded-lg border border-border/50 bg-card/30 px-3 py-2">
-                    <div className={cn("h-2 w-2 rounded-full", botStatus.running ? "bg-emerald-500" : "bg-muted-foreground")} />
-                    <span className="text-sm text-foreground truncate">{settings.host}</span>
+                    <div className={cn("h-2 w-2 rounded-full", botStatus.running ? "bg-emerald-500" : botStatus.waiting ? "bg-amber-500 animate-pulse" : "bg-muted-foreground")} />
+                    <div>
+                      <span className="text-sm text-foreground truncate block">{settings.host}</span>
+                      {botStatus.waiting && <span className="text-xs text-amber-400">Yeniden bağlanıyor...</span>}
+                    </div>
                   </div>
                 )}
               </div>
