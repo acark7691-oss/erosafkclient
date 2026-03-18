@@ -46,7 +46,7 @@ function PanelPageInner() {
   const router = useRouter()
   const { t } = useLang()
   const [username, setUsername] = useState("Eros")
-  const [botStatus, setBotStatus] = useState<any>({ running: false, ready: false, panicEnabled: true, panicDistance: 7, detectionDistance: 60, autoReconnect: true, waiting: false })
+  const [botStatus, setBotStatus] = useState<any>({ running: false, ready: false, panicEnabled: true, panicDistance: 7, detectionDistance: 60, autoReconnect: true, waiting: false, coordinates: null })
   const [settings, setSettings] = useState<Settings>({ host: "", port: 25565, version: "1.21.1", mc_username: "", panicEnabled: true, panicDistance: 7, detectionDistance: 60, autoReconnect: true, whitelist: [] })
   const [proxy, setProxy] = useState<ProxyStatus>({ enabled: true, host: "", port: 0 })
   const [logs, setLogs] = useState<LogEntry[]>([{ id:"1", timestamp: new Date().toLocaleTimeString("tr-TR"), message: "Panel baslatildi.", type:"info" }])
@@ -233,6 +233,30 @@ function PanelPageInner() {
               </div>
             ))}
           </div>
+
+          {/* Koordinat Kartı */}
+          {botStatus.coordinates && (
+            <div className="mb-4 rounded-xl border border-violet-500/20 bg-violet-500/5 px-5 py-3 flex items-center gap-4 transition-all duration-500"
+              style={{animation: "fadeIn 0.4s ease"}}>
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-violet-400">
+                  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/>
+                </svg>
+                <span className="text-violet-300 font-semibold">Koordinat</span>
+              </div>
+              <div className="flex items-center gap-3 font-mono text-sm">
+                <span><span className="text-red-400 font-bold">X</span> <span className="text-foreground font-semibold">{botStatus.coordinates.x.toLocaleString()}</span></span>
+                <span className="text-border">·</span>
+                <span><span className="text-emerald-400 font-bold">Y</span> <span className="text-foreground font-semibold">{botStatus.coordinates.y}</span></span>
+                <span className="text-border">·</span>
+                <span><span className="text-blue-400 font-bold">Z</span> <span className="text-foreground font-semibold">{botStatus.coordinates.z.toLocaleString()}</span></span>
+              </div>
+              <div className="ml-auto flex items-center gap-1.5">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse inline-block"/>
+                <span className="text-xs text-emerald-400">Canlı</span>
+              </div>
+            </div>
+          )}
 
           {/* Bot Controls + Tabs */}
           <div className="grid gap-6 lg:grid-cols-3">
