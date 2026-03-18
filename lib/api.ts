@@ -239,3 +239,30 @@ export async function stopSpawnerDrop() {
 export async function getSpawnerDropStatus(): Promise<{ running: boolean }> {
   return apiFetch<{ running: boolean }>("/api/spawner-drop/status")
 }
+
+// ── ENVANTEr ─────────────────────────────────────────────────
+export interface InventorySlot {
+  slot: number
+  name: string
+  displayName: string
+  count: number
+  type: number
+}
+
+export async function getInventory(): Promise<{ slots: (InventorySlot | null)[] }> {
+  return apiFetch<{ slots: (InventorySlot | null)[] }>("/api/inventory")
+}
+
+export async function dropItem(slot: number, all: boolean = false) {
+  return apiFetch<{ success: boolean }>("/api/inventory/drop", {
+    method: "POST",
+    body: JSON.stringify({ slot, all }),
+  })
+}
+
+export async function dropAllItems(itemName?: string) {
+  return apiFetch<{ success: boolean; total: number }>("/api/inventory/drop-all", {
+    method: "POST",
+    body: JSON.stringify({ itemName }),
+  })
+}

@@ -61,6 +61,8 @@ function PanelPageInner() {
   const [dropperRunning, setDropperRunning] = useState(false)
   const [lootLoading, setLootLoading] = useState(false)
   const [lootMsg, setLootMsg] = useState<{text:string;ok:boolean}|null>(null)
+  const [inventory, setInventory] = useState<(InventorySlot | null)[]>(Array(36).fill(null))
+  const [invLoading, setInvLoading] = useState(false)
   const logRef = useRef<HTMLDivElement>(null)
   const chatRef = useRef<HTMLDivElement>(null)
 
@@ -108,6 +110,7 @@ function PanelPageInner() {
     const id = setInterval(async () => {
       try {
         const [rawLogs, rawChat, status] = await Promise.all([logsPausedRef.current ? Promise.resolve(null) : getLogs(), getChatMessages(), getBotStatus()])
+      if (status.running) getInventory().then(d => setInventory(d.slots.slice(0, 36))).catch(() => {})
         if (rawLogs) {
           const clearTime = logClearTimeRef.current
           const filtered = clearTime > 0
@@ -188,6 +191,28 @@ function PanelPageInner() {
   const handleToggleProxy = async () => {
     const r = await toggleProxy()
     setProxy(r)
+  }
+
+  const refreshInventory = async () => {
+    try {
+      const data = await getInventory()
+      setInventory(data.slots.slice(0, 36))
+    } catch {}
+  }
+
+  const handleDropItem = async (slot: number, all: boolean) => {
+    try {
+      await dropItem(slot, all)
+      await refreshInventory()
+    } catch (err: any) { showToast(err.message, false) }
+  }
+
+  const handleDropAll = async (itemName?: string) => {
+    try {
+      const res = await dropAllItems(itemName)
+      showToast(res.total + " item droplandi!")
+      await refreshInventory()
+    } catch (err: any) { showToast(err.message, false) }
   }
 
   const handleSpawnerDrop = async () => {
@@ -405,6 +430,7 @@ function PanelPageInner() {
                     { value:"connection", icon:<Link2 className="h-4 w-4"/>, label:"Baglanti" },
                     { value:"chat", icon:<MessageSquare className="h-4 w-4"/>, label:"Chat & SSS" },
                     { value:"integrations", icon:<Zap className="h-4 w-4"/>, label:"Entegrasyonlar" },
+                    { value:"inventory", icon:<Users className="h-4 w-4"/>, label:"Envanter" },
                   ].map(t => (
                     <TabsTrigger key={t.value} value={t.value}
                       className="rounded-lg data-[state=active]:bg-cyan-500/10 data-[state=active]:text-cyan-400">
@@ -694,6 +720,93 @@ function PanelPageInner() {
                       </Button>
                       {lootMsg && <p className={cn("mt-3 text-xs", lootMsg.ok ? "text-emerald-400" : "text-destructive")}>{lootMsg.text}</p>}
                       {!botStatus.running && <p className="mt-3 text-xs text-amber-400">⚠ Bot çalışmıyor, önce botu başlatın.</p>}
+                    </div>
+                  </div>
+                </TabsContent>
+
+                {/* ENVANTER */}
+                <TabsContent value="inventory" className="mt-0">
+                  <div className="glass-card rounded-xl p-4">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="flex items-center gap-2 text-sm font-semibold">
+                        <Users className="h-4 w-4 text-cyan-400" />
+                        Bot Envanteri
+                      </h3>
+                      <div className="flex items-center gap-2">
+                        <Button variant="ghost" size="sm" onClick={refreshInventory}
+                          className="text-xs text-muted-foreground hover:text-foreground">
+                          <RefreshCw className="h-3 w-3 mr-1" />Yenile
+                        </Button>
+                        <Button variant="ghost" size="sm" onClick={() => handleDropAll()}
+                          className="text-xs text-destructive hover:text-destructive">
+                          Tümünü Drop Et
+                        </Button>
+                      </div>
+                    </div>
+
+                    {!botStatus.running ? (
+                      <p className="text-center text-sm text-muted-foreground py-8">Bot çalışmıyor</p>
+                    ) : (
+                      <div className="grid grid-cols-9 gap-1">
+                        {inventory.map((item, i) => (
+                          <div key={i} className={`relative group aspect-square rounded-lg border flex flex-col items-center justify-center cursor-pointer transition-all duration-150 ${item ? "border-border/50 bg-card/80 hover:border-cyan-500/50 hover:bg-cyan-500/5" : "border-border/20 bg-card/20"}`}
+                            title={item ? item.displayName + " x" + item.count : "Boş"}
+                            onClick={() => item && handleDropItem(item.slot, false)}
+                            onContextMenu={e => { e.preventDefault(); item && handleDropItem(item.slot, true) }}
+                          >
+                            {item ? (
+                              <>
+                                {/* Sol üst kırmızı drop butonu */}
+                                <button
+                                  className="absolute top-0.5 left-0.5 z-10 w-4 h-4 rounded-full bg-destructive/80 hover:bg-destructive flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                                  onClick={e => { e.stopPropagation(); handleDropItem(item.slot, true) }}
+                                  title="Tümünü drop et"
+                                >
+                                  <X className="h-2.5 w-2.5 text-white" />
+                                </button>
+                                {/* Item ikonu */}
+                                <span className="text-lg leading-none">
+                                  {item.name.includes("bone") ? "🦴" :
+                                   item.name.includes("arrow") ? "🏹" :
+                                   item.name.includes("pickaxe") ? "⛏️" :
+                                   item.name.includes("sword") ? "⚔️" :
+                                   item.name.includes("axe") ? "🪓" :
+                                   item.name.includes("shovel") ? "🪛" :
+                                   item.name.includes("diamond") ? "💎" :
+                                   item.name.includes("gold") ? "✨" :
+                                   item.name.includes("iron") ? "🔩" :
+                                   item.name.includes("coal") ? "⬛" :
+                                   item.name.includes("food") || item.name.includes("bread") || item.name.includes("apple") ? "🍎" :
+                                   item.name.includes("chest") ? "📦" :
+                                   item.name.includes("spawner") ? "🌀" :
+                                   item.name.includes("stone") ? "🪨" :
+                                   item.name.includes("wood") || item.name.includes("log") ? "🪵" :
+                                   "📦"}
+                                </span>
+                                {/* Stack sayısı */}
+                                <span className="absolute bottom-0.5 right-1 text-[9px] font-bold text-foreground leading-none">
+                                  {item.count > 1 ? item.count : ""}
+                                </span>
+                                {/* Hover overlay */}
+                                <div className="absolute inset-0 rounded-lg bg-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                              </>
+                            ) : null}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Alt uyarı */}
+                    <div className="mt-3 space-y-1.5">
+                      <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                        <span><span className="text-cyan-400">Sol tık</span> → 1 tane drop et</span>
+                        <span><span className="text-destructive">Sağ tık</span> → tüm stack drop et</span>
+                        <span><span className="text-destructive">🔴 Buton</span> → tüm stack drop et</span>
+                      </div>
+                      <div className="flex items-center gap-2 rounded-lg border border-destructive/20 bg-destructive/5 px-3 py-2 text-xs text-destructive">
+                        <AlertTriangle className="h-3 w-3 shrink-0" />
+                        Sağ tık ile o item türünün tüm stack&apos;i droplunur, geri alınamaz!
+                      </div>
                     </div>
                   </div>
                 </TabsContent>
