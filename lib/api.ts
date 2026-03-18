@@ -226,3 +226,16 @@ export async function removeFromWhitelist(name: string) {
     body: JSON.stringify({ name }),
   })
 }
+
+// ── SPAWNER DROPPER ──────────────────────────────────────────
+export async function startSpawnerDrop() {
+  return apiFetch<{ success: boolean; message: string }>("/api/spawner-drop", { method: "POST" })
+}
+
+export async function stopSpawnerDrop() {
+  return apiFetch<{ success: boolean }>("/api/spawner-drop/stop", { method: "POST" })
+}
+
+export async function getSpawnerDropStatus(): Promise<{ running: boolean }> {
+  return apiFetch<{ running: boolean }>("/api/spawner-drop/status")
+}
