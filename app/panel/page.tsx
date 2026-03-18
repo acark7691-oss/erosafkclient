@@ -42,17 +42,43 @@ const faqItems = [
   { id:"q5", question:"Bekleme modu ne ise yarar?", answer:"Bot baglantiktan sonra belirlenen sure bekleyip koruma moduna gecer. Sunucularin spawn korumasini atlamak icin kullanilir." },
 ]
 
-const ITEM_EMOJI: Record<string, string> = {
-  bone: "🦴", arrow: "🏹", tipped_arrow: "🏹", spectral_arrow: "🏹",
-  pickaxe: "⛏️", sword: "⚔️", axe: "🪓", shovel: "🪛", hoe: "🌿",
-  diamond: "💎", gold: "✨", iron: "🔩", coal: "⬛", emerald: "💚",
-  bread: "🍞", apple: "🍎", food: "🍎", chest: "📦", spawner: "🌀",
-  stone: "🪨", wood: "🪵", log: "🪵", planks: "🪵", dirt: "🟫",
-  bow: "🏹", shield: "🛡️", helmet: "⛑️", chestplate: "🥻", leggings: "👖", boots: "👟",
-}
+const ITEM_EMOJI: [string, string][] = [
+  ["bone", "🦴"],
+  ["arrow", "🏹"],
+  ["diamond_pickaxe", "⛏️"], ["netherite_pickaxe", "⛏️"], ["iron_pickaxe", "⛏️"], ["golden_pickaxe", "⛏️"], ["stone_pickaxe", "⛏️"], ["wooden_pickaxe", "⛏️"], ["pickaxe", "⛏️"],
+  ["diamond_sword", "⚔️"], ["netherite_sword", "⚔️"], ["iron_sword", "⚔️"], ["golden_sword", "⚔️"], ["stone_sword", "⚔️"], ["wooden_sword", "⚔️"], ["sword", "⚔️"],
+  ["diamond_axe", "🪓"], ["netherite_axe", "🪓"], ["iron_axe", "🪓"], ["axe", "🪓"],
+  ["diamond_shovel", "🪛"], ["shovel", "🪛"],
+  ["diamond_hoe", "🌿"], ["hoe", "🌿"],
+  ["diamond_helmet", "⛑️"], ["netherite_helmet", "⛑️"], ["iron_helmet", "⛑️"], ["helmet", "⛑️"],
+  ["diamond_chestplate", "🥻"], ["netherite_chestplate", "🥻"], ["chestplate", "🥻"],
+  ["diamond_leggings", "👖"], ["leggings", "👖"],
+  ["diamond_boots", "👟"], ["boots", "👟"],
+  ["diamond", "💎"],
+  ["gold_ingot", "🥇"], ["golden", "✨"],
+  ["iron_ingot", "🔩"], ["iron", "🔩"],
+  ["coal", "⬛"],
+  ["emerald", "💚"],
+  ["ender_pearl", "🟢"], ["ender", "👁️"],
+  ["bread", "🍞"], ["apple", "🍎"], ["steak", "🥩"], ["cooked", "🍖"], ["food", "🍎"],
+  ["chest", "📦"], ["shulker", "📦"],
+  ["spawner", "🌀"],
+  ["stone", "🪨"], ["cobblestone", "🪨"],
+  ["oak_log", "🪵"], ["birch_log", "🪵"], ["log", "🪵"], ["wood", "🪵"], ["planks", "🪵"],
+  ["dirt", "🟫"],
+  ["bow", "🏹"],
+  ["shield", "🛡️"],
+  ["totem", "🗿"],
+  ["obsidian", "⬛"],
+  ["blaze", "🔥"], ["gunpowder", "💥"], ["slimeball", "🟩"],
+  ["string", "🕸️"], ["feather", "🪶"],
+  ["rotten_flesh", "🥩"], ["spider_eye", "👁️"],
+  ["enchanted_book", "📖"], ["book", "📖"],
+  ["experience_bottle", "🍶"],
+]
 
 function getEmoji(name: string): string {
-  for (const [key, emoji] of Object.entries(ITEM_EMOJI)) {
+  for (const [key, emoji] of ITEM_EMOJI) {
     if (name.includes(key)) return emoji
   }
   return "📦"
