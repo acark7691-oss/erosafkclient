@@ -59,6 +59,7 @@ function PanelPageInner() {
   const logClearTimeRef = useRef<number>(0)
   const [settingsSaved, setSettingsSaved] = useState(false)
   const logRef = useRef<HTMLDivElement>(null)
+  const chatRef = useRef<HTMLDivElement>(null)
 
   const showToast = (msg: string, ok = true) => {
     setToast({msg, ok})
@@ -130,7 +131,7 @@ function PanelPageInner() {
         }
         setChat(prev => {
           const selfMsgs = prev.filter((m: any) => m.self)
-          const serverMsgs = rawChat.map((m, i) => ({ id: `server_${i}`, ...m }))
+          const serverMsgs = rawChat.map((m, i) => ({ id: `server_${i}`, timestamp: new Date().toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"}), ...m }))
           // Self mesajları server'dan gelmişse kaldır
           const filtered = selfMsgs.filter((sm: any) => 
             !serverMsgs.some(s => s.username === sm.username && s.message === sm.message)
@@ -147,6 +148,11 @@ function PanelPageInner() {
   useEffect(() => {
     if (logRef.current) logRef.current.scrollTop = logRef.current.scrollHeight
   }, [logs])
+
+  // Auto-scroll chat
+  useEffect(() => {
+    if (chatRef.current) chatRef.current.scrollTop = chatRef.current.scrollHeight
+  }, [chat])
 
   const handleStart = async () => {
     const res = await startBot()
@@ -185,7 +191,7 @@ function PanelPageInner() {
     if (!chatInput.trim()) return
     const msg = chatInput.trim()
     // Kendi mesajını hemen göster
-    setChat(prev => [...prev, { id: Date.now().toString(), username: username, message: msg, self: true } as any])
+    setChat(prev => [...prev, { id: Date.now().toString(), username: username, message: msg, self: true, timestamp: new Date().toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"}) } as any])
     setChatInput("")
     try { await sendChat(msg) } catch {}
   }
