@@ -103,7 +103,7 @@ function PanelPageInner() {
   const [dropperRunning, setDropperRunning] = useState(false)
   const [lootLoading, setLootLoading] = useState(false)
   const [lootMsg, setLootMsg] = useState<{text:string;ok:boolean}|null>(null)
-  const [inventory, setInventory] = useState<(InventorySlot | null)[]>(Array(36).fill(null))
+  const [inventory, setInventory] = useState<(InventorySlot | null)[]>(Array(45).fill(null))
   const [invLoading, setInvLoading] = useState(false)
 
   const logRef = useRef<HTMLDivElement>(null)
@@ -185,7 +185,7 @@ function PanelPageInner() {
     setInvLoading(true)
     try {
       const data = await getInventory()
-      setInventory(data.slots.slice(0, 36))
+      setInventory(data.slots.slice(0, 45))
     } catch(e) { console.error("Inventory:", e) }
     finally { setInvLoading(false) }
   }
@@ -651,7 +651,8 @@ function PanelPageInner() {
                   {!botStatus.running ? (
                     <p className="text-center text-sm text-muted-foreground py-8">Bot çalışmıyor</p>
                   ) : (
-                    <div className="grid grid-cols-9 gap-1">
+                    <div className="grid grid-cols-9 gap-1" style={{borderTop: "none"}}>
+                      {/* 9x5 grid - üst 36 envanter + alt 9 hotbar */}
                       {inventory.map((item, i) => (
                         <div key={i}
                           className={cn("relative group aspect-square rounded-lg border flex flex-col items-center justify-center cursor-pointer transition-all duration-150",
