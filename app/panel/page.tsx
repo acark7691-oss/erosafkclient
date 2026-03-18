@@ -115,7 +115,6 @@ function PanelPageInner() {
     const id = setInterval(async () => {
       try {
         const [rawLogs, rawChat, status] = await Promise.all([logsPausedRef.current ? Promise.resolve(null) : getLogs(), getChatMessages(), getBotStatus()])
-      if (status.running) getInventory().then(d => setInventory(d.slots.slice(0, 36))).catch(() => {})
         if (rawLogs) {
           setLogs(rawLogs.map((msg, i) => {
             let type: LogEntry["type"] = "info"
