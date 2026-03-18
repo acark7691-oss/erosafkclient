@@ -191,15 +191,17 @@ function PanelPageInner() {
   }
 
   const handleSpawnerDrop = async () => {
+    const apiBase = process.env.NEXT_PUBLIC_API_URL || ""
+    const token = localStorage.getItem("token") || ""
     if (dropperRunning) {
-      try { await fetch(\`\${process.env.NEXT_PUBLIC_API_URL || ""}/api/spawner-drop/stop\`, { method:"POST", headers:{"x-token": localStorage.getItem("token")||"" } }) } catch {}
+      try { await fetch(apiBase + "/api/spawner-drop/stop", { method:"POST", headers:{"x-token": token} }) } catch {}
       setDropperRunning(false)
       setLootMsg({ text: "Dropper durduruldu.", ok: false })
       return
     }
     setLootLoading(true); setLootMsg(null)
     try {
-      const res = await fetch(\`\${process.env.NEXT_PUBLIC_API_URL || ""}/api/spawner-drop\`, { method:"POST", headers:{"x-token": localStorage.getItem("token")||"", "Content-Type":"application/json" } })
+      const res = await fetch(apiBase + "/api/spawner-drop", { method:"POST", headers:{"x-token": token, "Content-Type":"application/json"} })
       const data = await res.json()
       if (data.success) { setDropperRunning(true); setLootMsg({ text: data.message, ok: true }) }
       else setLootMsg({ text: data.error || "Hata!", ok: false })
