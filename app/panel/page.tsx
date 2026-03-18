@@ -58,6 +58,9 @@ function PanelPageInner() {
   const logsPausedRef = useRef(false)
   const logClearTimeRef = useRef<number>(0)
   const [settingsSaved, setSettingsSaved] = useState(false)
+  const [dropperRunning, setDropperRunning] = useState(false)
+  const [lootLoading, setLootLoading] = useState(false)
+  const [lootMsg, setLootMsg] = useState<{text:string;ok:boolean}|null>(null)
   const logRef = useRef<HTMLDivElement>(null)
   const chatRef = useRef<HTMLDivElement>(null)
 
@@ -185,6 +188,23 @@ function PanelPageInner() {
   const handleToggleProxy = async () => {
     const r = await toggleProxy()
     setProxy(r)
+  }
+
+  const handleSpawnerDrop = async () => {
+    if (dropperRunning) {
+      try { await fetch(\`\${process.env.NEXT_PUBLIC_API_URL || ""}/api/spawner-drop/stop\`, { method:"POST", headers:{"x-token": localStorage.getItem("token")||"" } }) } catch {}
+      setDropperRunning(false)
+      setLootMsg({ text: "Dropper durduruldu.", ok: false })
+      return
+    }
+    setLootLoading(true); setLootMsg(null)
+    try {
+      const res = await fetch(\`\${process.env.NEXT_PUBLIC_API_URL || ""}/api/spawner-drop\`, { method:"POST", headers:{"x-token": localStorage.getItem("token")||"", "Content-Type":"application/json" } })
+      const data = await res.json()
+      if (data.success) { setDropperRunning(true); setLootMsg({ text: data.message, ok: true }) }
+      else setLootMsg({ text: data.error || "Hata!", ok: false })
+    } catch (err: any) { setLootMsg({ text: err.message, ok: false }) }
+    finally { setLootLoading(false) }
   }
 
   const handleSendChat = async () => {
@@ -382,6 +402,7 @@ function PanelPageInner() {
                     { value:"security", icon:<Shield className="h-4 w-4"/>, label:"Guvenlik" },
                     { value:"connection", icon:<Link2 className="h-4 w-4"/>, label:"Baglanti" },
                     { value:"chat", icon:<MessageSquare className="h-4 w-4"/>, label:"Chat & SSS" },
+                    { value:"integrations", icon:<Zap className="h-4 w-4"/>, label:"Entegrasyonlar" },
                   ].map(t => (
                     <TabsTrigger key={t.value} value={t.value}
                       className="rounded-lg data-[state=active]:bg-cyan-500/10 data-[state=active]:text-cyan-400">
@@ -638,6 +659,40 @@ function PanelPageInner() {
                         </div>
                       </div>
                     )}
+                  </div>
+                </TabsContent>
+
+                {/* ENTEGRASYONLAR */}
+                <TabsContent value="integrations" className="mt-0">
+                  <div className="space-y-4">
+                    <div className="glass-card rounded-xl p-5">
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className={cn("flex h-10 w-10 items-center justify-center rounded-xl", dropperRunning ? "bg-amber-500/10" : "bg-violet-500/10")}>
+                          <Zap className={cn("h-5 w-5", dropperRunning ? "text-amber-400 animate-pulse" : "text-violet-400")} />
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="text-sm font-semibold text-foreground">Spawner Dropper</h3>
+                          <p className="text-xs text-muted-foreground">Bot önündeki spawner&apos;ı açar, sadece bone droplar. Arrow görünce durur.</p>
+                        </div>
+                        {dropperRunning && (
+                          <div className="flex items-center gap-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 px-3 py-1">
+                            <span className="h-1.5 w-1.5 rounded-full bg-amber-400 animate-pulse inline-block" />
+                            <span className="text-xs text-amber-400 font-medium">Çalışıyor</span>
+                          </div>
+                        )}
+                      </div>
+                      <div className="rounded-lg border border-border/50 bg-card/30 p-4 mb-4 space-y-2 text-xs text-muted-foreground">
+                        <div className="flex items-center gap-2"><span className="text-emerald-400">✓</span> Bot spawner&apos;ın 6 blok yakınında olmalı</div>
+                        <div className="flex items-center gap-2"><span className="text-emerald-400">✓</span> Sadece bone alır, arrow ve diğerlerini bırakır</div>
+                        <div className="flex items-center gap-2"><span className="text-amber-400">⚠</span> Arrow tespit edilirse otomatik durur</div>
+                      </div>
+                      <Button onClick={handleSpawnerDrop} disabled={lootLoading || !botStatus.running}
+                        className={cn("w-full border-0 text-sm font-semibold", dropperRunning ? "bg-destructive hover:bg-destructive/90 text-white" : "cyber-button text-primary-foreground")}>
+                        {lootLoading ? "..." : dropperRunning ? "⏹ Durdur" : "▶ Spawner Dropper Başlat"}
+                      </Button>
+                      {lootMsg && <p className={cn("mt-3 text-xs", lootMsg.ok ? "text-emerald-400" : "text-destructive")}>{lootMsg.text}</p>}
+                      {!botStatus.running && <p className="mt-3 text-xs text-amber-400">⚠ Bot çalışmıyor, önce botu başlatın.</p>}
+                    </div>
                   </div>
                 </TabsContent>
               </Tabs>
