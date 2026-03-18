@@ -97,6 +97,11 @@ function PanelPageInner() {
 
   // Load initial data
   useEffect(() => {
+    // Dropper durumunu kontrol et
+    fetch((process.env.NEXT_PUBLIC_API_URL || "") + "/api/spawner-drop/status", {
+      headers: { "x-token": localStorage.getItem("token") || "" }
+    }).then(r => r.json()).then(d => setDropperRunning(d.running)).catch(() => setDropperRunning(false))
+
     getSettings().then(s => {
       setSettings(s)
       setWhitelist(s.whitelist || [])
@@ -112,28 +117,14 @@ function PanelPageInner() {
         const [rawLogs, rawChat, status] = await Promise.all([logsPausedRef.current ? Promise.resolve(null) : getLogs(), getChatMessages(), getBotStatus()])
       if (status.running) getInventory().then(d => setInventory(d.slots.slice(0, 36))).catch(() => {})
         if (rawLogs) {
-          const clearTime = logClearTimeRef.current
-          const filtered = clearTime > 0
-            ? rawLogs.filter(msg => {
-                const ts = msg.substring(1, 9)
-                if (!ts || ts.length < 8) return false
-                const [h, m, s] = ts.split(":").map(Number)
-                const clearDate = new Date(clearTime)
-                const logDate = new Date(clearTime)
-                logDate.setHours(h, m, s, 0)
-                return logDate > clearDate
-              })
-            : rawLogs
-          if (filtered.length > 0 || clearTime === 0) {
-            setLogs(filtered.map((msg, i) => {
-              let type: LogEntry["type"] = "info"
-              if (msg.includes("✅") || msg.toLowerCase().includes("basarili") || msg.toLowerCase().includes("hazir")) type = "success"
-              else if (msg.includes("⚠️") || msg.toLowerCase().includes("uyari")) type = "warning"
-              else if (msg.includes("🚨") || msg.toLowerCase().includes("hata") || msg.includes("kicked")) type = "error"
-              else if (msg.toLowerCase().includes("microsoft") || msg.includes("🔐")) type = "microsoft"
-              return { id: `${i}`, timestamp: msg.substring(1, 9) || "", message: msg.substring(11) || msg, type }
-            }))
-          }
+          setLogs(rawLogs.map((msg, i) => {
+            let type: LogEntry["type"] = "info"
+            if (msg.includes("✅") || msg.toLowerCase().includes("basarili") || msg.toLowerCase().includes("hazir")) type = "success"
+            else if (msg.includes("⚠️") || msg.toLowerCase().includes("uyari")) type = "warning"
+            else if (msg.includes("🚨") || msg.toLowerCase().includes("hata") || msg.includes("kicked")) type = "error"
+            else if (msg.toLowerCase().includes("microsoft") || msg.includes("🔐")) type = "microsoft"
+            return { id: `${i}`, timestamp: msg.substring(1, 9) || "", message: msg.substring(11) || msg, type }
+          }))
         }
         setChat(prev => {
           const selfMsgs = prev.filter((m: any) => m.self)
