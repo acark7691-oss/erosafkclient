@@ -128,7 +128,15 @@ function PanelPageInner() {
             }))
           }
         }
-        setChat(rawChat.map((m, i) => ({ id: `${i}`, ...m })))
+        setChat(prev => {
+          const selfMsgs = prev.filter((m: any) => m.self)
+          const serverMsgs = rawChat.map((m, i) => ({ id: `server_${i}`, ...m }))
+          // Self mesajları server'dan gelmişse kaldır
+          const filtered = selfMsgs.filter((sm: any) => 
+            !serverMsgs.some(s => s.username === sm.username && s.message === sm.message)
+          )
+          return [...serverMsgs, ...filtered].sort(() => 0)
+        })
         setBotStatus(status)
       } catch {}
     }, 1000)
@@ -175,8 +183,11 @@ function PanelPageInner() {
 
   const handleSendChat = async () => {
     if (!chatInput.trim()) return
-    await sendChat(chatInput)
+    const msg = chatInput.trim()
+    // Kendi mesajını hemen göster
+    setChat(prev => [...prev, { id: Date.now().toString(), username: username, message: msg, self: true } as any])
     setChatInput("")
+    try { await sendChat(msg) } catch {}
   }
 
   const handleAddWl = async () => {
@@ -236,20 +247,25 @@ function PanelPageInner() {
 
           {/* Koordinat Kartı */}
           {botStatus.coordinates && (
-            <div className="mb-4 rounded-xl border border-violet-500/20 bg-violet-500/5 px-5 py-3 flex items-center gap-4 transition-all duration-500"
+            <div className="mb-4 rounded-xl border border-violet-500/20 bg-violet-500/5 px-5 py-3 flex items-center gap-4"
               style={{animation: "fadeIn 0.4s ease"}}>
               <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-violet-400">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{color:"#a78bfa"}}>
                   <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/>
                 </svg>
-                <span className="text-violet-300 font-semibold">Koordinat</span>
+                <span style={{color:"#c4b5fd"}} className="font-semibold">Koordinat</span>
               </div>
               <div className="flex items-center gap-3 font-mono text-sm">
-                <span><span className="text-red-400 font-bold">X</span> <span className="text-foreground font-semibold">{botStatus.coordinates.x.toLocaleString()}</span></span>
-                <span className="text-border">·</span>
-                <span><span className="text-emerald-400 font-bold">Y</span> <span className="text-foreground font-semibold">{botStatus.coordinates.y}</span></span>
-                <span className="text-border">·</span>
-                <span><span className="text-blue-400 font-bold">Z</span> <span className="text-foreground font-semibold">{botStatus.coordinates.z.toLocaleString()}</span></span>
+                {(() => {
+                  const fmt = (n: number) => Math.abs(n) >= 1000 ? (n/1000).toFixed(1) + "k" : n.toString()
+                  return <>
+                    <span><span className="text-red-400 font-bold">X</span> <span className="text-foreground font-semibold">{fmt(botStatus.coordinates.x)}</span></span>
+                    <span className="text-muted-foreground">·</span>
+                    <span><span className="text-emerald-400 font-bold">Y</span> <span className="text-foreground font-semibold">{botStatus.coordinates.y}</span></span>
+                    <span className="text-muted-foreground">·</span>
+                    <span><span className="text-blue-400 font-bold">Z</span> <span className="text-foreground font-semibold">{fmt(botStatus.coordinates.z)}</span></span>
+                  </>
+                })()}
               </div>
               <div className="ml-auto flex items-center gap-1.5">
                 <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse inline-block"/>
@@ -357,9 +373,9 @@ function PanelPageInner() {
                 <TabsList className="glass-card mb-4 h-auto w-full flex-wrap justify-start gap-1 rounded-xl p-1">
                   {[
                     { value:"terminal", icon:<TerminalIcon className="h-4 w-4"/>, label:"Terminal" },
-                    { value:"chat", icon:<MessageSquare className="h-4 w-4"/>, label:"Chat & SSS" },
-                    { value:"connection", icon:<Link2 className="h-4 w-4"/>, label:"Baglanti" },
                     { value:"security", icon:<Shield className="h-4 w-4"/>, label:"Guvenlik" },
+                    { value:"connection", icon:<Link2 className="h-4 w-4"/>, label:"Baglanti" },
+                    { value:"chat", icon:<MessageSquare className="h-4 w-4"/>, label:"Chat & SSS" },
                   ].map(t => (
                     <TabsTrigger key={t.value} value={t.value}
                       className="rounded-lg data-[state=active]:bg-cyan-500/10 data-[state=active]:text-cyan-400">
